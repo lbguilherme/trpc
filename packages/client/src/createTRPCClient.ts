@@ -6,6 +6,7 @@ import type {
   inferClientTypes,
   inferProcedureInput,
   inferTransformedProcedureOutput,
+  inferTransformedSubscriptionOutput,
   IntersectionError,
   ProcedureOptions,
   ProcedureType,
@@ -82,7 +83,10 @@ type DecoratedProcedureRecord<
           $Value['_def']['type'],
           {
             input: inferProcedureInput<$Value>;
-            output: inferTransformedProcedureOutput<
+            output: $Value['_def']['type'] extends 'subscription' ? inferTransformedSubscriptionOutput<
+              inferClientTypes<TRouter>,
+              $Value
+            > : inferTransformedProcedureOutput<
               inferClientTypes<TRouter>,
               $Value
             >;
